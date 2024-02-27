@@ -1,5 +1,6 @@
-#include "solver.h"
-int main(int argc, char** argv){
+#include "functions.c"
+#include "stack.c"
+int main(int argc, char* argv[]){
 	printf("help");
 	int width = 7;
 	int height = 7;
@@ -14,9 +15,10 @@ int main(int argc, char** argv){
 	int currentY = 1; //Y wynosi 0 w lewym gornym rogu i rosnie idac w dol ! idziemy po pojedynczych 
 			  //znakach typu X P K
 
-      printf("problem z alokacja pamieci"); 
+       
 	maze = malloc(width*height*sizeof(char)+5);
 	visited = malloc(width*height*sizeof(bool));
+	c = ' ';
 	 while (c != EOF){
                 c = fgetc(fp);
                 if (c == '\n')
@@ -25,15 +27,35 @@ int main(int argc, char** argv){
 		i++;
 
                 }
-	if(strcmp(argv[1],"righth") == 0){
-		//WALL FOLLOWING
-		/*Czy w jakims kierunku Jest K? jak tam to idz tam
-		 * Czy można ruszyć sie w prawo? Jak tak to rusz sie ... prosto .. w lewo .... do tylu
-		 */
-
-		
-	}printf(" w solver.c zzaraz aktywuje funckje canTurnRight");
+	
 	printf("%d",canTurnRight(width,height, EAST ,3 , 1,maze));
+
+	if(true){ 
+		while(true){
+			if(exitNear(width,currentX,currentY,maze) != 0){
+				switch(exitNear(width,currentX,currentY,maze)){
+					case NORTH:
+						currentY--;
+						break;
+					case EAST:
+						currentX++;
+						break;
+					case SOUTH:
+						currentY++;
+						break;
+					case WEST:
+						currentX--;
+						break;}
+			}
+			else{
+				if(canTurnRight(width,height,zwrot, currentX, currentY, maze)){
+					zwrot++;
+
+				}		
+			}
+		}
+	
+	}
 	fclose(fp);
 	free(maze);
 	free(visited);
