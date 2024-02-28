@@ -222,7 +222,7 @@ int main(int argc, char* argv[]){
 		while(true){
 			//printf("poczatek iteracji\n");
 			if(exitNear(width,currentX,currentY,maze) != 0){
-				printf("exit near\n");
+			//	printf("exit near\n");
 				switch(exitNear(width,currentX,currentY,maze)){
 					case NORTH:
 						currentY--;
@@ -258,8 +258,8 @@ int main(int argc, char* argv[]){
                                                 break;}
 					push(directions,TURNRIGHT);
 					push(directions, FORWARD);
-					printf("prawo\n");
-					printf("prosto\n");}
+					//printf("prawo\n");
+					//printf("prosto\n");}
 				else if(canGoForward(width,height,zwrot,currentX,currentY,maze)){
 					//printf("mozna isc prosto\n");
 					switch(zwrot){
@@ -276,7 +276,7 @@ int main(int argc, char* argv[]){
                                                 currentX--;
                                                 break;}
 					push(directions,FORWARD);
-					printf("prosto\n");
+					//printf("prosto\n");
 					
 				}
 				else if(canTurnLeft(width,height,zwrot,currentX,currentY,maze)){
@@ -297,8 +297,8 @@ int main(int argc, char* argv[]){
                                                 break;}
 					push(directions,TURNLEFT);
 					push(directions,FORWARD);
-					printf("lewo\n");
-					printf("prosto\n");
+					//printf("lewo\n");
+					//printf("prosto\n");
 				}
 				else{
 					 switch(zwrot){
