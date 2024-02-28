@@ -17,4 +17,5 @@
 #define TURNLEFT 13
 #define FORWARD 12
 #define BACK 14
+#define MAX_SIZE 100000
 #endif

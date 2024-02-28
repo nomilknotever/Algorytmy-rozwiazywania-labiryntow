@@ -1,35 +1,29 @@
 #include "constants.h"
 
-
-#include<stdio.h>
-#include<stdlib.h>
-#define MAX_SIZE 100000000 // Maximum size of the stack
-
-
 typedef struct {
     int* array; // Dynamic array to store stack elements
     int top;    // Index of the top element in the stack
 } Stack;
 
-// Function to initialize a stack
+// initialize stack
 Stack* createStack() {
     Stack* stack = (Stack*)malloc(sizeof(Stack));
     stack->array = (int*)malloc(MAX_SIZE * sizeof(int));
-    stack->top = -1; // Initialize top as -1 to indicate an empty stack
+    stack->top = -1; // initialize top as -1 to indicate an empty stack
     return stack;
 }
 
-// Function to check if the stack is empty
+// check if the stack is empty
 int isEmpty(Stack* stack) {
     return stack->top == -1;
 }
 
-// Function to check if the stack is full
+// check if the stack is full
 int isFull(Stack* stack) {
     return stack->top == MAX_SIZE - 1;
 }
 
-// Function to push an element onto the stack
+// push an element onto the stack
 void push(Stack* stack, int item) {
     if (isFull(stack)) {
         printf("Stack overflow\n");
@@ -38,7 +32,7 @@ void push(Stack* stack, int item) {
     stack->array[++stack->top] = item;
 }
 
-// Function to pop an element from the stack
+// pop an element from the stack
 int pop(Stack* stack) {
     if (isEmpty(stack)) {
         printf("Stack underflow\n");
@@ -47,7 +41,7 @@ int pop(Stack* stack) {
     return stack->array[stack->top--];
 }
 
-// Function to get the top element of the stack without removing it
+// get the top element of the stack without removing it
 int peek(Stack* stack) {
     if (isEmpty(stack)) {
         printf("Stack is empty\n");
@@ -56,7 +50,7 @@ int peek(Stack* stack) {
     return stack->array[stack->top];
 }
 
-// Function to print the stack
+// print the stack
 void printStack(Stack* stack) {
     if (isEmpty(stack)) {
         printf("Stack is empty\n");
@@ -83,7 +77,7 @@ void printStack(Stack* stack) {
     printf("\n");
 }
 
-// Function to free memory allocated for the stack
+// free memory allocated for the stack
 void destroyStack(Stack* stack) {
     free(stack->array);
     free(stack);
@@ -168,19 +162,17 @@ bool canTurnLeft(int width, int height, int zwr, int x, int y, char* maze){
                         return false;
                         break;
 		}}
-
 char exitNear(int width, int x, int y, char* maze){
-	//printf("sprawdzamy czy koniec blisko x %d y %d",x,y);
-	if(maze[(y-1)*width + x] == 'K'){//gora
+	if(maze[(y-1)*width + x] == 'K'){//up
 		return NORTH;
 	} 
-	else if(maze[y*width+x+1] == 'K'){//prawo
+	else if(maze[y*width+x+1] == 'K'){//right
 		return EAST;
 	}
-	else if(maze[(y+1)*width+x] == 'K'){//dol
+	else if(maze[(y+1)*width+x] == 'K'){//down
 		return SOUTH;
 	}
-	else if(maze[y*width+x-1] == 'K'){ // lewp
+	else if(maze[y*width+x-1] == 'K'){ // left
 		return WEST;
 	}else{return 0;}}
 	
@@ -213,16 +205,11 @@ int main(int argc, char* argv[]){
 		i++;
 
                 }
-	  printf("\n **Rozwiazanie**\n");
-	  //printf("\n%c\n",maze[currentY*width+currentX]);
-	//printf("%s\n",maze);
-	//printf("%d\n",canTurnRight(width,height, EAST ,3 , 1,maze));
-
+	  printf("\n **Solution**\n");
+	 
 	if(true){ 
 		while(true){
-			//printf("poczatek iteracji\n");
 			if(exitNear(width,currentX,currentY,maze) != 0){
-			//	printf("exit near\n");
 				switch(exitNear(width,currentX,currentY,maze)){
 					case NORTH:
 						currentY--;
@@ -241,7 +228,6 @@ int main(int argc, char* argv[]){
 			}
 			else{
 				if(canTurnRight(width,height,zwrot, currentX, currentY, maze)){
-					//printf("mozna skrecic w prawo\n");
 					zwrot++;
 					 switch(zwrot){
                                                  case NORTH:
@@ -257,11 +243,9 @@ int main(int argc, char* argv[]){
                                                 currentX--;
                                                 break;}
 					push(directions,TURNRIGHT);
-					push(directions, FORWARD);
-					//printf("prawo\n");
-					//printf("prosto\n");}
+					push(directions, FORWARD);}
+
 				else if(canGoForward(width,height,zwrot,currentX,currentY,maze)){
-					//printf("mozna isc prosto\n");
 					switch(zwrot){
 						 case NORTH:
                                                 currentY--;
@@ -276,11 +260,9 @@ int main(int argc, char* argv[]){
                                                 currentX--;
                                                 break;}
 					push(directions,FORWARD);
-					//printf("prosto\n");
 					
 				}
 				else if(canTurnLeft(width,height,zwrot,currentX,currentY,maze)){
-					//printf("mozna w lewp\n");
 					zwrot--;
 					 switch(zwrot){
                                                  case NORTH:
@@ -297,8 +279,6 @@ int main(int argc, char* argv[]){
                                                 break;}
 					push(directions,TURNLEFT);
 					push(directions,FORWARD);
-					//printf("lewo\n");
-					//printf("prosto\n");
 				}
 				else{
 					 switch(zwrot){
@@ -324,12 +304,8 @@ int main(int argc, char* argv[]){
 				if(zwrot>4){
 					zwrot %= 4;
 				}	
-			
-			}
-					
-			
+			}	
 		}
-	
 	}
 	printStack(directions);
 	fclose(fp);
