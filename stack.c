@@ -1,4 +1,7 @@
+#ifndef STACK_C
+#define STACK_C
 #define MAX_SIZE 1000 // Maximum size of the stack
+#include"stack.h"
 
 typedef struct {
     int* array; // Dynamic array to store stack elements
@@ -68,4 +71,4 @@ void destroyStack(Stack* stack) {
     free(stack->array);
     free(stack);
 }
-
+#endif

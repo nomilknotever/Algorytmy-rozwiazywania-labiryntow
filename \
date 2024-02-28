@@ -1,0 +1,120 @@
+
+#include "functions.h"
+#include "stack.h"
+#include<stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include<stdbool.h>
+#define WALL X
+#define ENTER P
+#define EXIT K
+#define SPACE ' '
+#define NORTH 1
+#define EAST 2
+#define SOUTH 3
+#define WEST 4
+#define TURNRIGHT 11
+#define TURNLEFT 13
+#define FORWARD 12
+
+int main(int argc, char* argv[]){
+	printf("help");
+	int width = 7;
+	int height = 7;
+	char* maze;
+	bool* visited;
+	FILE* fp;
+        fp = fopen("maze.txt","r");
+        char c;
+	int i = 0;
+	int zwrot = EAST;
+	int currentX = 0;//X wynosi 0 w lewym gornym rogu i rosnie idac w prawa strone
+	int currentY = 1; //Y wynosi 0 w lewym gornym rogu i rosnie idac w dol ! idziemy po pojedynczych 
+			  //znakach typu X P K
+	Stack* directions;
+        directions = createStack();
+
+	maze = malloc(width*height*sizeof(char)+5);
+	visited = malloc(width*height*sizeof(bool));
+	c = ' ';
+	 while (c != EOF){
+                c = fgetc(fp);
+                if (c == '\n')
+                        {continue;}
+		maze[i] = c;
+		i++;
+
+                }
+	
+	printf("%d",canTurnRight(width,height, EAST ,3 , 1,maze));
+
+	if(true){ 
+		while(true){
+			if(exitNear(width,currentX,currentY,maze) != 0){
+				switch(exitNear(width,currentX,currentY,maze)){
+					case NORTH:
+						currentY--;
+						break;
+					case EAST:
+						currentX++;
+						break;
+					case SOUTH:
+						currentY++;
+						break;
+					case WEST:
+						currentX--;
+						break;}
+			}
+			else{
+				if(canTurnRight(width,height,zwrot, currentX, currentY, maze)){
+					zwrot++;
+					push(directions,TURNRIGHT);}
+				else if(canGoForward(width,height,zwrot,currentX,currentY,maze)){
+					switch(zwrot){
+						 case NORTH:
+                                                currentY--;
+                                                break;
+                                        case EAST:
+                                                currentX++;
+                                                break;
+                                        case SOUTH:
+                                                currentY++;
+                                                break;
+                                        case WEST:
+                                                currentX--;
+                                                break;}
+					push(directions,FORWARD);
+					
+					}
+				else if(canTurnLeft(width,height,zwrot,currentX,currentY,maze)){
+					zwrot--;
+					push(directions,TURNLEFT);
+				}
+				else{
+					 switch(zwrot){
+                                                 case NORTH:
+                                                currentY++;
+                                                break;
+                                        case EAST:
+                                                currentX--;
+                                                break;
+                                        case SOUTH:
+                                                currentY--;
+                                                break;
+                                        case WEST:
+                                                currentX++;
+                                                break;}
+                                        pop(directions);
+				}
+				}
+					
+			
+		}
+	
+	}
+	fclose(fp);
+	free(maze);
+	free(visited);
+	destroyStack(directions);
+}return 0;}//}
+
