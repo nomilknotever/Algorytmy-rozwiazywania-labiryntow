@@ -3,7 +3,7 @@
 
 #include<stdio.h>
 #include<stdlib.h>
-#define MAX_SIZE 1000 // Maximum size of the stack
+#define MAX_SIZE 100000000 // Maximum size of the stack
 
 
 typedef struct {
@@ -62,9 +62,23 @@ void printStack(Stack* stack) {
         printf("Stack is empty\n");
         return;
     }
-    printf("Stack: ");
-    for (int i = 0; i <= stack->top; i++) {
-        printf("%d ", stack->array[i]);
+   
+    int i = 0;
+    while (i <= stack->top) {
+	if(stack->array[i] == FORWARD){
+		int j =1;
+		while (i + j <= stack->top && stack->array[i + j] == FORWARD) {
+                j++;
+            }
+            printf("Forward %d\n", j);
+            i += j;
+        }
+	else if(stack->array[i] == TURNRIGHT){printf("Turn right\n");
+	i++;}
+	else if(stack->array[i] == TURNLEFT){printf("Turn left\n");
+	i++;
+	}
+        
     }
     printf("\n");
 }
@@ -75,7 +89,7 @@ void destroyStack(Stack* stack) {
     free(stack);
 }
 bool canTurnRight(int width, int height, int zwr, int x, int y, char* maze){
-	printf("sprawdzam czy moge skrecic w prawo\n");
+	;
 	switch(zwr){
 
 		case NORTH:
@@ -84,7 +98,7 @@ bool canTurnRight(int width, int height, int zwr, int x, int y, char* maze){
 			return false;
 			break;
 		case EAST:
-			printf("zaczynam sprawdzac co jak zwrot to wschod\n");
+			
                         if(maze[width*(y+1) + x] == SPACE){
                                 return true;}
                         return false;
@@ -111,7 +125,7 @@ bool canGoForward(int width, int height, int zwr, int x, int y, char* maze){
                         return false;
                         break;
                 case EAST:
-                        printf("zaczynam sprawdzac co jak zwrot to wschod\n");
+                        
                         if(maze[width*y + x + 1] == SPACE){
                                 return true;}
                         return false;
@@ -138,7 +152,7 @@ bool canTurnLeft(int width, int height, int zwr, int x, int y, char* maze){
                         return false;
                         break;
                 case EAST:
-                        printf("zaczynam sprawdzac co jak zwrot to wschod\n");
+                       
                         if(maze[width*(y-1) + x] == SPACE){
                                 return true;}
                         return false;
@@ -156,6 +170,7 @@ bool canTurnLeft(int width, int height, int zwr, int x, int y, char* maze){
 		}}
 
 char exitNear(int width, int x, int y, char* maze){
+	//printf("sprawdzamy czy koniec blisko x %d y %d",x,y);
 	if(maze[(y-1)*width + x] == 'K'){//gora
 		return NORTH;
 	} 
@@ -167,14 +182,11 @@ char exitNear(int width, int x, int y, char* maze){
 	}
 	else if(maze[y*width+x-1] == 'K'){ // lewp
 		return WEST;
-	}
+	}else{return 0;}}
 	
-
-}
 int main(int argc, char* argv[]){
-	printf("help");
-	int width = 7;
-	int height = 7;
+	int width = 11;
+	int height = 11;
 	char* maze;
 	bool* visited;
 	FILE* fp;
@@ -182,29 +194,35 @@ int main(int argc, char* argv[]){
         char c;
 	int i = 0;
 	int zwrot = EAST;
-	int currentX = 0;//X wynosi 0 w lewym gornym rogu i rosnie idac w prawa strone
+	int currentX = 1;//X wynosi 0 w lewym gornym rogu i rosnie idac w prawa strone
+			 //
 	int currentY = 1; //Y wynosi 0 w lewym gornym rogu i rosnie idac w dol ! idziemy po pojedynczych 
 			  //znakach typu X P K
 	Stack* directions;
         directions = createStack();
-
 	maze = malloc(width*height*sizeof(char)+5);
 	visited = malloc(width*height*sizeof(bool));
 	c = ' ';
+	
 	 while (c != EOF){
                 c = fgetc(fp);
+		printf("%c",c);
                 if (c == '\n')
                         {continue;}
 		maze[i] = c;
 		i++;
 
                 }
-	
-	printf("%d",canTurnRight(width,height, EAST ,3 , 1,maze));
+	  printf("\n **Rozwiazanie**\n");
+	  //printf("\n%c\n",maze[currentY*width+currentX]);
+	//printf("%s\n",maze);
+	//printf("%d\n",canTurnRight(width,height, EAST ,3 , 1,maze));
 
 	if(true){ 
 		while(true){
+			//printf("poczatek iteracji\n");
 			if(exitNear(width,currentX,currentY,maze) != 0){
+				printf("exit near\n");
 				switch(exitNear(width,currentX,currentY,maze)){
 					case NORTH:
 						currentY--;
@@ -218,12 +236,32 @@ int main(int argc, char* argv[]){
 					case WEST:
 						currentX--;
 						break;}
+				push(directions,FORWARD);
+			       break;	
 			}
 			else{
 				if(canTurnRight(width,height,zwrot, currentX, currentY, maze)){
+					//printf("mozna skrecic w prawo\n");
 					zwrot++;
-					push(directions,TURNRIGHT);}
+					 switch(zwrot){
+                                                 case NORTH:
+                                                currentY--;
+                                                break;
+                                        case EAST:
+                                                currentX++;
+                                                break;
+                                        case SOUTH:
+                                                currentY++;
+                                                break;
+                                        case WEST:
+                                                currentX--;
+                                                break;}
+					push(directions,TURNRIGHT);
+					push(directions, FORWARD);
+					printf("prawo\n");
+					printf("prosto\n");}
 				else if(canGoForward(width,height,zwrot,currentX,currentY,maze)){
+					//printf("mozna isc prosto\n");
 					switch(zwrot){
 						 case NORTH:
                                                 currentY--;
@@ -238,34 +276,62 @@ int main(int argc, char* argv[]){
                                                 currentX--;
                                                 break;}
 					push(directions,FORWARD);
+					printf("prosto\n");
 					
-					}
-				//else if(canTurnLeft(width,height,zwrot,currentX,currentY,maze)){
-				//	zwrot--;
-				//	push(directions,TURNLEFT);
-				//}
+				}
+				else if(canTurnLeft(width,height,zwrot,currentX,currentY,maze)){
+					//printf("mozna w lewp\n");
+					zwrot--;
+					 switch(zwrot){
+                                                 case NORTH:
+                                                currentY--;
+                                                break;
+                                        case EAST:
+                                                currentX++;
+                                                break;
+                                        case SOUTH:
+                                                currentY++;
+                                                break;
+                                        case WEST:
+                                                currentX--;
+                                                break;}
+					push(directions,TURNLEFT);
+					push(directions,FORWARD);
+					printf("lewo\n");
+					printf("prosto\n");
+				}
 				else{
 					 switch(zwrot){
                                                  case NORTH:
+						zwrot +=2;
                                                 currentY++;
                                                 break;
                                         case EAST:
+						zwrot +=2;
                                                 currentX--;
                                                 break;
                                         case SOUTH:
+						zwrot -=2;
                                                 currentY--;
                                                 break;
                                         case WEST:
+						zwrot -=2;
                                                 currentX++;
                                                 break;}
                                         pop(directions);
+					push(directions,BACK);
 				}
-				}
+				if(zwrot>4){
+					zwrot %= 4;
+				}	
+			
+			}
 					
 			
 		}
 	
 	}
+	printStack(directions);
 	fclose(fp);
 	free(maze);
 	free(visited);
