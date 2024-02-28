@@ -1,9 +1,11 @@
-#ifndef FUNCTIONS_C
-#define FUNCTIONS_C
-typedef struct {
+#include "functions.h"
+#include"constants.h"
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct Stack {
     int* array; // Dynamic array to store stack elements
     int top;    // Index of the top element in the stack
-} Stack;
+}Stack;
 
 // initialize stack
 Stack* createStack() {
@@ -175,4 +177,5 @@ char exitNear(int width, int x, int y, char* maze){
 	else if(maze[y*width+x-1] == 'K'){ // left
 		return WEST;
 	}else{return 0;}}
-#endif
+
+

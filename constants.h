@@ -1,10 +1,10 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include<stdio.h>
-#include<stdlib.h>
+
 #include<string.h>
-#include<stdbool.h>
+
+#include<time.h>
 #define WALL 'X'
 #define ENTER 'P'
 #define EXIT 'K'
