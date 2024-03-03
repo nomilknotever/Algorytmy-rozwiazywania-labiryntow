@@ -60,6 +60,8 @@ void printStack(Stack* stack) {
     }
    
     int i = 0;
+    printf("%di\n",stack->top);
+    printf("%d\n",6);
     while (i <= stack->top) {
 	if(stack->array[i] == FORWARD){
 		int j =1;
